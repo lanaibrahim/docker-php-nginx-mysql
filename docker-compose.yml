@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  php-fpm:
+    # tty: true # Enables debugging capabilities when attached to this container.
+    image: docker.io/bitnami/php-fpm:8.2
+    container_name: php-fpm
+    networks:
+      - app-network
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./www:/var/www
+
+  nginx:
+    image: nginx:1.23
+    container_name: nginx
+    networks:
+      - app-network
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./www:/var/www
+    ports:
+      - "80:80"
+
+  # mysql:
+  #   image: mysql:latest
+  #   container_name: mysql
+  #   # restart: always
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: pass123
+networks:
+  app-network:
+    external: true
